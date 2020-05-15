@@ -97,6 +97,8 @@ class System {
 		var size = haxe.macro.Compiler.getDefine("windowSize");
 		var title = haxe.macro.Compiler.getDefine("windowTitle");
 		var fixed = haxe.macro.Compiler.getDefine("windowFixed") == "1";
+		var glSamples = haxe.macro.Compiler.getDefine("glSamples");
+		var samples = 1;
 		if( title == null )
 			title = "";
 		if( size != null ) {
@@ -104,9 +106,14 @@ class System {
 			width = Std.parseInt(p[0]);
 			height = Std.parseInt(p[1]);
 		}
+		if ( glSamples != null ) {
+			samples = Std.parseInt(glSamples);
+		}
+
 		timeoutTick();
 		#if hlsdl
 			sdl.Sdl.init();
+			sdl.Sdl.setGLOptions(3, 2, 24, 8, 1, samples);
 			@:privateAccess Window.initChars();
 			@:privateAccess Window.inst = new Window(title, width, height, fixed);
 			init();
